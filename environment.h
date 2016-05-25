@@ -2,6 +2,7 @@
 #define ENVIRONMENT_H
 #include <cstdio>
 #include <cstdlib>
+#include <string>
 #include "phone.h"
 #include "basestation.h"
 
@@ -22,10 +23,13 @@ private:
   Basestation* basestation_list[MAX_BASESTATIONS];
 
 public:
-  void initialization();
+  string chromosome;
+  void initialization(string _chromosome);
   void step();
   void main_loop();
   vector<pair<int, int> > get_basestation_positions();
+  Basestation* get_basestation(int id);
+  string get_chromosome();
 };
 
 #endif

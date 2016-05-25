@@ -15,7 +15,7 @@ int main(int argc, char* argv[]){
     Environment environment;
 
     //Initialize the environment.
-    environment.initialization();
+    environment.initialization("A");
 
     //Run the main loop.
     environment.main_loop();

@@ -15,10 +15,16 @@ private:
   int x;
   int y;
   int priority;
+  int bandwith_assigned;
+  int assigned_basestation;
+  void* environment;
 public:
-  Phone(int _x, int _y, int _priority, int _ID, vector<pair<int, int> > basestations_positions);
+  Phone(int _x, int _y, int _priority, int _ID, void* environment);
   double get_distance(int x, int y, int x2, int y2);
-  void select_station(vector<pair<int, int> > basestations_positions);
+  vector<pair<double, int> > create_distances_vector();
+  bool select_station();
   int get_id();
+  int get_assigned_basestation();
+  ~Phone();
 };
 #endif
