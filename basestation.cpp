@@ -16,7 +16,7 @@ int Basestation::get_y(){
 }
 
 int Basestation::assign_bandwith(int id){
-  string chromosome = ((Environment*)environment)->get_chromosome();
+  string chromosome = "A";// ((Environment*)environment)->get_chromosome();
 
   //Simple algorithm
   if (chromosome == "A"){

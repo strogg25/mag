@@ -1,6 +1,7 @@
 #include "phone.h"
 #include "basestation.h"
 #include "environment.h"
+#include "utils.h"
 
 Phone::Phone(int _x, int _y, int _priority, int _ID, void* _environment){
   x = _x;
@@ -20,7 +21,7 @@ vector<pair<double, int> > Phone::create_distances_vector()
   for(int i = 0; i < (int)basestations_positions.size(); i++){
     int x2 = basestations_positions[i].first;
     int y2 = basestations_positions[i].second;
-    distances.push_back(make_pair(get_distance(x, y, x2, y2), i));
+    distances.push_back(make_pair(Utils::get_distance(x, y, x2, y2), i));
   }
   sort(distances.begin(), distances.end());
   return distances;
@@ -42,7 +43,6 @@ bool Phone::select_station(){
         assigned_basestation = id;
         return true;
       }
-
    }
    return false;
 }
@@ -60,6 +60,15 @@ int Phone::get_id() {
 int Phone::get_assigned_basestation()
 {
   return assigned_basestation;
+}
+
+void Phone::send_data(){
+  if (assigned_basestation == -1)
+    return;
+  Basestation* basestation =
+    ((Environment*)environment)->get_basestation(assigned_basestation);
+    ((Environment*)environment)->send_data(x, y,
+      basestation->get_x(), basestation->get_y(), bandwith_assigned);
 }
 
 Phone::~Phone()

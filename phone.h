@@ -25,6 +25,7 @@ public:
   bool select_station();
   int get_id();
   int get_assigned_basestation();
+  void send_data();
   ~Phone();
 };
 #endif
