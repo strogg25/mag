@@ -1,22 +1,34 @@
 #include "environment.h"
 #include "utils.h"
 #include <sstream>
+#include <utility>
+using namespace std;
+
+#define BASESTATION_1_X 0
+#define BASESTATION_1_Y 0
+#define BASESTATION_2_X 0
+#define BASESTATION_2_Y 999
+#define BASESTATION_3_X 999
+#define BASESTATION_3_Y 500
 
 void Environment::initialization(string _chromosome, bool _verbose, int seed)
 {
     verbose       = _verbose;
-    chromosome    = _chromosome;
+    chromosome    = string(_chromosome.c_str());
     step_count    = 0;
     phone_number  = 0;
     phone_next_id = 1;
     data_sent     = 0.0;
 
-    basestation_list[0] = new Basestation(0,0, (void*)this);
-    basestation_list[1] = new Basestation(0,999, (void*)this);
-    basestation_list[2] = new Basestation(999, 500, (void*)this);
-
     //Initialize the random generator.
     srand(seed);
+
+    basestation_list[0] =
+      new Basestation(BASESTATION_1_X, BASESTATION_1_Y, chromosome);
+    basestation_list[1] =
+      new Basestation(BASESTATION_2_X, BASESTATION_2_Y, chromosome);
+    basestation_list[2] =
+      new Basestation(BASESTATION_3_X, BASESTATION_3_Y, chromosome);
 
     ostringstream output_file_name;
     output_file_name << "results_" << seed << ".txt";
@@ -26,7 +38,8 @@ void Environment::initialization(string _chromosome, bool _verbose, int seed)
 vector<pair<int, int> > Environment::get_basestation_positions(){
   vector<pair<int, int> >ret;
   for (int i = 0; i < MAX_BASESTATIONS; i++){
-    ret.push_back(make_pair(basestation_list[i]->get_x(), basestation_list[i]->get_y()));
+    ret.push_back(make_pair(basestation_list[i]->get_x(),
+                            basestation_list[i]->get_y()));
   }
   return ret;
 }
@@ -99,7 +112,7 @@ Basestation* Environment::get_basestation(int id){
 }
 
 string Environment::get_chromosome(){
-  return chromosome;
+  return chromosome.c_str();
 }
 
 void Environment::main_loop()
@@ -121,21 +134,29 @@ void Environment::send_data(int phone_x, int phone_y,
     double distance = Utils::get_distance(phone_x, phone_y,
                                        basestation_x, basestation_y);
 
-    // Received power base calculation
-    const double lambda = 1.0;
-    const double g_r = 16;
-    const double g_t = 2;
-    const double P_t = 10;
+     // Physical constants.
+     const double lambda = 1.0;           // wavelength
+     const double alpha = 3.0;            // exponent attenuation TODO (?)
+     const double P_t = 10;               // emitting power
+     const double gamma = 10;             // random distribution - shadowing TODO (?)
+     const double bandwith_width = 1000;  // bandwith width TODO (?)
+     const double k = 1.38065812e-23;     // Boltzman constant.
+     const double T = 300;                // Temperature (300K = 25c)
+     const double W = 1000;               // receiver bandwith width TODO (?)
 
-    double denominator = (4 * M_PI * distance);
-    double P_r = P_t * (lambda * lambda * g_r * g_t);
-    P_r /=          (denominator * denominator);
+    // Received power base calculation.
+    const double P_0 = pow(4 * M_PI / lambda, 2);
+    double P_r = P_t * P_0 * gamma * pow(1 / distance, alpha);
 
-    // Calculate shadowing TODO
     // Calculate interference TODO
-    // Calculate noise TODO
-    // Calculate SINR TODO
+    double P_i = 0;
 
-    data_sent += P_r;
+    // Calculate noise
+    double P_n = k * W * T;
 
+    // Calculate SINR
+    double SINR = P_r / (P_n + P_i);
+    double R = bandwith_width * log2(1.0 + SINR);
+
+    data_sent += R;
 }

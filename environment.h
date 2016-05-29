@@ -13,9 +13,11 @@
 #define MAX_PHONES 1000
 #define MAX_BASESTATIONS 3
 
+
 class Environment
 {
 private:
+  string chromosome;
   int step_count;
   Phone* phone_list[MAX_PHONES];
   int phone_number;
@@ -26,7 +28,6 @@ private:
   Basestation* basestation_list[MAX_BASESTATIONS];
 
 public:
-  string chromosome;
   void initialization(string _chromosome, bool _verbose, int seed);
   void step();
   void main_loop();

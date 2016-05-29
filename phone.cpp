@@ -3,12 +3,8 @@
 #include "environment.h"
 #include "utils.h"
 
-Phone::Phone(int _x, int _y, int _priority, int _ID, void* _environment){
-  x = _x;
-  y = _y;
-  priority = _priority;
-  ID = _ID;
-  environment = _environment;
+Phone::Phone(int x, int y, int priority, int ID, void* environment)
+:x(x), y(y), priority(priority), ID(ID), environment(environment){
   select_station();
 }
 
@@ -45,12 +41,6 @@ bool Phone::select_station(){
       }
    }
    return false;
-}
-
-double Phone::get_distance(int x, int y, int x2, int y2){
-  double dx = abs(x-x2);
-  double dy = abs(y-y2);
-  return sqrt(dx*dx + dy*dy);
 }
 
 int Phone::get_id() {

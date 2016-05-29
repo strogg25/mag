@@ -34,7 +34,8 @@ int main(int argc, char* argv[]){
     Environment environment;
 
     //Initialize the environment.
-    environment.initialization("A", verbose, seed);
+    string _chromosome = "A";
+    environment.initialization(_chromosome, verbose, seed);
 
     //Run the main loop.
     environment.main_loop();

@@ -9,11 +9,12 @@ class Basestation
 private:
   int x, y;
   int bandwith_table[MAX_BANDWITH_SIZE];
-  void* environment;
+  string chromosome;
 public:
-  Basestation(int _x, int _y, void* _environment);
+  Basestation(int x, int y, string chromosome);
   int assign_bandwith(int id);
   void remove_assigment(int id);
+  int simple_algorithm(int id);
   int get_x();
   int get_y();
 };
